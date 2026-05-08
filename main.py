@@ -1,85 +1,151 @@
-# main.py interactivo para reservas
-
-
 import sys
 import os
 
-# Añade la raíz del proyecto al path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from auth.auth_manager import AuthManager
 from utils.time_manager import TimeManager
+from utils.logger import Logger
+
 from services.servicio_sala import ServicioSala
+from services.servicio_equipo import ServicioEquipo
+from services.servicio_asesoria import ServicioAsesoria
+
 from models.reserva import Reserva
 
 print("=== SISTEMA SOFTWARE FJ ===")
-print("Bienvenido al sistema de reservas\n")
+print("Bienvenido al sistema\n")
 
-# Instancia del sistema de autenticación
-auth = AuthManager()
+try:
 
+    auth = AuthManager()
 
-# INGRESO DE DATOS USUARIO
+   
+    # DATOS CLIENTE
+   
 
+    nombre = input("Ingrese su nombre: ")
+    correo = input("Ingrese su correo: ")
+    clave = input("Ingrese su contraseña: ")
 
-nombre = input("Ingrese su nombre: ")
-correo = input("Ingrese su correo: ")
-clave = input("Ingrese su contraseña: ")
+    cliente = auth.registrar(nombre, correo, clave)
 
-print("\n=== DATOS DE LA RESERVA ===")
+   
+    # TIEMPO RESERVA
+    
 
-hora_inicio = input("Hora de inicio (Ejemplo 08:00): ")
-hora_fin = input("Hora final (Ejemplo 11:30): ")
+    hora_inicio = input("Hora inicio: ")
+    hora_fin = input("Hora final: ")
 
-print("\nTipos de sala disponibles:")
-print("1. Sala Básica")
-print("2. Sala Premium")
-print("3. Sala VIP")
+    horas = TimeManager.calcular_horas(
+        hora_inicio,
+        hora_fin
+    )
 
-opcion = input("Seleccione una opción: ")
+    
+    # MENÚ SERVICIOS
+    
 
+    print("\nTIPOS DE SERVICIO")
+    print("1. Reserva de Sala")
+    print("2. Alquiler de Equipos")
+    print("3. Asesoría")
 
-# VALIDACIÓN DE SALA
+    opcion = input("Seleccione una opción: ")
 
+   
+    # SERVICIO SALA
+   
 
-if opcion == "1":
-    tipo_sala = "Sala A"
-elif opcion == "2":
-    tipo_sala = "Sala B"
-elif opcion == "3":
-    tipo_sala = " Sala Premium"
-else:
-    print("Opción inválida. Se asignará Sala A")
-    tipo_sala = "Sala A"
+    if opcion == "1":
 
+        print("\n1. Sala A")
+        print("2. Sala B")
+        print("3. Sala Premium")
 
-# REGISTRO Y LOGIN
+        sala = input("Seleccione sala: ")
 
-cliente = auth.registrar(nombre, correo, clave)
-cliente = auth.login(correo, clave)
+        if sala == "1":
+            servicio = ServicioSala("Sala A", horas)
 
+        elif sala == "2":
+            servicio = ServicioSala("Sala B", horas)
 
-# CÁLCULO DE HORAS
+        elif sala == "3":
+            servicio = ServicioSala("Sala Premium", horas)
 
+        else:
+            raise ValueError("Sala inválida")
 
-horas = TimeManager.calcular_horas(hora_inicio, hora_fin)
+   
+    # SERVICIO EQUIPO
+    
 
-# CREACIÓN DEL SERVICIO
+    elif opcion == "2":
 
+        print("\n1. Laptop")
+        print("2. VideoBeam")
+        print("3. Impresora")
 
-servicio = ServicioSala(tipo_sala, horas)
+        equipo = input("Seleccione equipo: ")
 
+        if equipo == "1":
+            servicio = ServicioEquipo("Laptop", horas)
 
-# CREACIÓN DE LA RESERVA
+        elif equipo == "2":
+            servicio = ServicioEquipo("VideoBeam", horas)
 
-reserva = Reserva(cliente, servicio)
+        elif equipo == "3":
+            servicio = ServicioEquipo("Impresora", horas)
 
+        else:
+            raise ValueError("Equipo inválido")
 
-# RESULTADO FINAL
+  
+    # SERVICIO ASESORIA
+   
 
+    elif opcion == "3":
 
-print("\n=== RESERVA GENERADA ===")
-print(reserva.resumen())
+        print("\n1. Programación")
+        print("2. Bases de Datos")
+        print("3. Redes")
 
-print("\nGracias por usar SOFTWARE FJ")
+        asesoria = input("Seleccione asesoría: ")
 
+        if asesoria == "1":
+            servicio = ServicioAsesoria("Programación", horas)
+
+        elif asesoria == "2":
+            servicio = ServicioAsesoria("Bases de Datos", horas)
+
+        elif asesoria == "3":
+            servicio = ServicioAsesoria("Redes", horas)
+
+        else:
+            raise ValueError("Asesoría inválida")
+
+    else:
+        raise ValueError("Servicio no válido")
+
+  
+    # CREACIÓN DE RESERVA
+    
+
+    reserva = Reserva(cliente, servicio)
+
+    print("\n=== RESERVA GENERADA ===")
+    print(reserva.resumen())
+
+    Logger.registrar_evento(
+        "Reserva realizada correctamente"
+    )
+
+except Exception as e:
+
+    print(f"\nERROR: {e}")
+
+    Logger.registrar_error(str(e))
+
+finally:
+    print("\nSistema finalizado")

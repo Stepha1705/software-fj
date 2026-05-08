@@ -1,0 +1,10 @@
+[EVENTO] 2026-05-08 16:25:09.632816 - Reserva realizada correctamente
+[ERROR] 2026-05-08 16:26:32.255677 - Correo inválido
+[ERROR] 2026-05-08 16:28:22.232086 - ServicioEquipo.__init__() takes 2 positional arguments but 3 were given
+[EVENTO] 2026-05-08 16:31:14.991816 - Reserva realizada correctamente
+[ERROR] 2026-05-08 16:32:23.295597 - ServicioAsesoria.__init__() takes 2 positional arguments but 3 were given
+[ERROR] 2026-05-08 16:34:03.231727 - ServicioAsesoria.__init__() takes 2 positional arguments but 3 were given
+[EVENTO] 2026-05-08 16:35:05.439769 - Reserva realizada correctamente
+[ERROR] 2026-05-08 16:35:46.519534 - ServicioAsesoria.__init__() takes 2 positional arguments but 3 were given
+[ERROR] 2026-05-08 16:41:13.751102 - Correo inválido
+[EVENTO] 2026-05-08 16:41:56.239450 - Reserva realizada correctamente
