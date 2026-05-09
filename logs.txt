@@ -1,0 +1,2 @@
+Error inesperado: name 'AuthManager' is not defined
+Error inesperado: name 'AuthManager' is not defined
